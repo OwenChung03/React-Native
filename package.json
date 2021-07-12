@@ -8,12 +8,37 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@freakycoder/react-native-bounceable": "^0.2.5",
+    "@paraboly/react-native-card": "^1.0.3",
+    "@react-native-community/datetimepicker": "3.2.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/picker": "^1.8.1",
+    "@react-native-picker/picker": "^1.16.1",
+    "@react-navigation/material-bottom-tabs": "^5.3.15",
+    "@react-navigation/native": "^5.9.4",
+    "@react-navigation/stack": "^5.14.5",
+    "axios": "^0.21.1",
+    "date-fns": "^2.22.1",
     "expo": "~41.0.1",
     "expo-status-bar": "~1.0.4",
+    "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
-    "react-native-web": "~0.13.12"
+    "react-native-date-picker": "^3.3.2",
+    "react-native-dynamic-vector-icons": "^1.1.6",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-image-modal": "^1.0.16",
+    "react-native-image-pan-zoom": "^2.1.12",
+    "react-native-image-zoom-viewer": "^3.0.1",
+    "react-native-paper": "^4.9.2",
+    "react-native-reanimated": "^2.1.0",
+    "react-native-safe-area-context": "^3.2.0",
+    "react-native-screens": "^3.0.0",
+    "react-native-vector-icons": "^8.1.0",
+    "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.6.4",
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
