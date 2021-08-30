@@ -7,6 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Stock from './Stock';
 import { Searchbar } from 'react-native-paper';
 import { Divider} from 'react-native-paper';
+import CompanyInfo from './CompanyInfo';
+import Strategy from './Strategy';
 
 const win = Dimensions.get('window');
 const Stack = createStackNavigator();
@@ -35,16 +37,19 @@ const Home = ({navigation}) => {
           onChangeText={onChangeSearch}
           value={searchQuery}
       />
-    <ScrollView>
+    <ScrollView style={{marginBottom:50}}>
         {isLoading? <Text>Loading </Text>:
           stocksData.records.map((stockData,index)=>{
             if (stockData['fields']['Ticker'].includes(searchQuery.toUpperCase())) {
               return(
                 <TouchableHighlight key={index} style={styles.card} 
                   activeOpacity={0.4} underlayColor={'steelblue'}
-                  onPress={() => navigation.navigate('Stock',{
-                    ticker: stockData['fields']['Ticker']
-                  })}
+                  onPress={() => {
+                    navigation.navigate('Stock',{
+                      ticker: stockData['fields']['Ticker'],
+                      pass: 'asdf'
+                  })
+                }}
                 >
                   <View style={styles.box}>
                     <View>
@@ -65,23 +70,13 @@ const Home = ({navigation}) => {
   )
 }
 
-function HomeScreen({route,navigation}) {
-  const {ticker} = route.params
-  log(route)
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>{ticker}</Text>
-    </View>
-  );
-}
-
-
 const Stocks = () => {
     return (
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Stock" component={Stock}>
-        </Stack.Screen>
+        <Stack.Screen name="Stock" component={CompanyInfo}/>
+        
+        <Stack.Screen name="Strategy" component={Strategy}/>
       </Stack.Navigator>
 
     );

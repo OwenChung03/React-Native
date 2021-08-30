@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions, Button} from 'react-native';
+import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Chart, Line, Area, HorizontalAxis, VerticalAxis } from 'react-native-responsive-linechart'
 import { format } from 'date-fns';
@@ -11,8 +11,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const win = Dimensions.get('window');
 
-const Stock =({route,navigation})=> {
-    const [ticker,setTicker] = React.useState(route)
+const Strategy =({route,navigation})=> {
+    console.log(route.params.ticker.ticker)
+    const [ticker,setTicker] = React.useState(route.params.ticker.ticker)
     const [selectedValue, setSelectedValue] = React.useState("DEMA");
     const [startdate, setstartDate] = React.useState(new Date('2020-01-01'));
     const [startmode, setstartMode] = React.useState('date');
@@ -53,7 +54,7 @@ const Stock =({route,navigation})=> {
     return (
       <ScrollView>
         <View 
-        style={{width:win.width,height:win.height*0.1,flexDirection:"row",flexWrap:"wrap",justifyContent:"center"}}>
+        style={{width:win.width,height:win.height*0.1,flexDirection:"row",flexWrap:"wrap",marginTop:10,justifyContent:"center"}}>
           <TouchableHighlight onPress={showDatepicker} style={styles.date} activeOpacity={0.4} underlayColor={'steelblue'}>
             <>
             <Text style={{alignSelf:"center", color:"#5a5a5a",fontSize:18}}>Start Date</Text>
@@ -89,27 +90,29 @@ const Stock =({route,navigation})=> {
             </>
           </TouchableHighlight>
         </View>
-        <View style={{height:win.height*0.22,width:win.width,backgroundColor:"#72bcd4"}}>
-          <Text style={{paddingLeft:10}}>Close Price for {ticker}</Text>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/close_price/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.height*0.2,width:win.width,marginTop:5}}>
+        <View style={styles.graph1}>
+          <Text style={{paddingLeft:10,backgroundColor:"#72bcd4"}}>Choose Strategy</Text>
+          <Picker
+            selectedValue={selectedValue}
+            style={{ height: 30, width: win.width*0.8 }}
+            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+            >
+            <Picker.Item label="DEMA" value="DEMA"/>
+            <Picker.Item label="OBV" value="OBV"/>
+            <Picker.Item label="SMA" value="SMA"/>
+          </Picker>
+          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
+                style={{height:win.height*0.3,width:win.width,marginTop:6}}
+                originWhitelist={['*']}>
           </WebView>
         </View>
-        <View style={{height:win.height*0.22,width:win.width,backgroundColor:"#72bcd4"}}>
-          <Text style={{paddingLeft:10}}>Volume for {ticker}</Text>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/volume/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.width*0.2,width:win.width,marginTop:5}}>
-        </WebView>
+        <View style={styles.graph2}>
+          <Text style={{paddingLeft:10,backgroundColor:"#72bcd4"}}>Plots</Text>
+          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/broker_${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
+                style={{height:win.height*0.3,width:win.width,marginTop:6}}
+                originWhitelist={['*']}>
+          </WebView>
         </View>
-        <TouchableHighlight style={{alignSelf:"center",margin:20,borderColor:"blue",borderRadius:2,borderWidth:2}} 
-            onPress={() => {
-              navigation.navigate('Strategy',{
-                ticker: {ticker}
-            })
-          }}
-        >
-          <Text style={{fontSize:20}}>Test out your strategy</Text>
-        </TouchableHighlight>
       </ScrollView>
     );
 }
@@ -144,4 +147,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Stock;
+export default Strategy;

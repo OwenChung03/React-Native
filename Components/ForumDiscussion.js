@@ -29,7 +29,7 @@ const Twitter = () =>{
     return(
         <View>
             {isLoading? <Text>loading</Text>: 
-                <ScrollView>
+                <ScrollView style={{marginBottom:100}}>
                     {twitterData.map((tweet,index) => {
 
                         return(
@@ -63,16 +63,11 @@ const Stockwits = () => {
     const [stockwitsData,setStockwitsData]= React.useState();
     const [isLoading,setIsLoading] = React.useState(true);
     const [symbol,setSymbol] = React.useState('AAPL');
-    const obj = {'AAPL': 'Apple Inc.', 'MSFT': 'Microsoft Corporation', 'AMZN': 'Amazon.com, Inc.',
-    'GOOG': 'Alphabet Inc.', 'FB': 'Facebook, Inc.', 'TSLA': 'Tesla, Inc.',
-    'BABA': 'Alibaba Group Holding Limited', 'TSM': 'Taiwan Semiconductor Manufacturing Company Limited',
-    'JPM': 'JPMorgan Chase & Co.', 'NVDA': 'NVIDIA Corporation', 'DIS': 'The Walt Disney Company',
-    'KO': 'The Coca-Cola Company', 'VZ': 'Verizon Communications Inc.', 'INTC': 'Intel Corporation',
-    'NFLX': 'Netflix, Inc.', 'PFE': 'Pfizer Inc.', 'BA': 'The Boeing Company', 'SE': 'Sea Limited',
-    'SQ': 'Square, Inc.', 'AMD': 'Advanced Micro Devices, Inc.', 'ZM': 'Zoom Video Communications, Inc.',
-    'ABNB': 'Airbnb, Inc.', 'GM': 'General Motors Company', 'NIO': 'NIO Inc.', 'F': 'Ford Motor Company',
-    'PLTR': 'Palantir Technologies Inc.', 'GME': 'GameStop Corp.', 'AMC': 'AMC Entertainment Holdings, Inc.',
-    'BYND': 'Beyond Meat, Inc.', 'BB': 'BlackBerry Limited'}
+    const obj = {'AAPL': 'Apple Inc.', 'AMC':'AMC Entertainment Holdings, Inc.','MSFT': 'Microsoft Corporation',
+                'AMZN': 'Amazon.com, Inc.','TSLA': 'Tesla, Inc.','BB': 'BlackBerry Limited',
+                'GME': 'GameStop Corp.','SPCE':"Virgin Galactic Holdings, Inc.",'F': 'Ford Motor Company','FB': 'Facebook, Inc.'}
+
+
     const array = Object.keys(obj)
     React.useEffect(()=>{
         axios.get(`https://mysterious-springs-60709.herokuapp.com/stockwits/${symbol}`)
@@ -92,11 +87,11 @@ const Stockwits = () => {
                 <Text >Search Symbol</Text>
             </View>
             <View style={{width:win.width*0.6,alignSelf:"center"}}>
-            <Searchbar
+            {/* <Searchbar
                             placeholder= 'Search'
                             onChangeText={onChangeSearch}
                             value={searchQuery}
-                        />
+            /> */}
             </View>
             <View style={{borderWidth:2,borderColor:"#99cfe0",borderRadius:40,margin:10,width:win.width*0.6,alignSelf:"center",paddingLeft:10}}>
 
@@ -114,7 +109,7 @@ const Stockwits = () => {
                 </Picker>
             </View>
 
-                <ScrollView>
+                <ScrollView style={{marginBottom:100}}>
                     {stockwitsData.map((post,index) => {
                         return(
                             <Card key={index} style={styles.card}>
