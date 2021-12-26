@@ -6,7 +6,9 @@ import Stocks from './Stocks';
 import ForumDiscussion from './ForumDiscussion';
 import { createStackNavigator } from '@react-navigation/stack';
 import CompanyInfo from './CompanyInfo';
-
+import { Icon } from 'react-native-elements';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { makeMutable } from 'react-native-reanimated';
 const Tab = createMaterialBottomTabNavigator();
 
 const Homepage = () => {
@@ -17,8 +19,10 @@ const Homepage = () => {
         inactiveColor="black"
         barStyle={{ backgroundColor: '#196098' }}
     >
-        <Tab.Screen name="Stocks" component={Stocks}></Tab.Screen>
-        <Tab.Screen name="Forum Discussion" component={ForumDiscussion} />    
+        <Tab.Screen 
+        name="Stocks" 
+        component={Stocks}></Tab.Screen>
+        <Tab.Screen name="Forum Discussion" component={ForumDiscussion}/>    
  
         
     </Tab.Navigator>

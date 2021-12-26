@@ -4,9 +4,9 @@
     "slug": "valuehub",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logodesign1.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logodesign1.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,13 +17,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "valuehub.com"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logodesign1.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "valuehub.com"
     },
     "web": {
       "favicon": "./assets/favicon.png"

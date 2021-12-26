@@ -2,16 +2,19 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions, Button} from 'react-native';
+import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions, ActivityIndicator} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Chart, Line, Area, HorizontalAxis, VerticalAxis } from 'react-native-responsive-linechart'
-import { format } from 'date-fns';
+import { format, max } from 'date-fns';
+import ImageModal from 'react-native-image-modal';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { tr } from 'date-fns/locale';
 
 
 const win = Dimensions.get('window');
 
 const Stock =({route,navigation})=> {
+    const [loading,setLoading] = React.useState();
     const [ticker,setTicker] = React.useState(route)
     const [selectedValue, setSelectedValue] = React.useState("DEMA");
     const [startdate, setstartDate] = React.useState(new Date('2020-01-01'));
@@ -19,10 +22,10 @@ const Stock =({route,navigation})=> {
     const [startshow, setstartShow] = React.useState(false);
     const [stocksData,setStocksData] = React.useState([]);
     const onstartChange = (event, selectedDate) => {
-
       const currentDate = selectedDate || startdate;
       setstartShow(Platform.OS === 'ios');
       setstartDate(currentDate);
+      setLoading(true);
     };
     const showstartMode = (currentMode) => {
       if (currentMode!= "") {
@@ -48,7 +51,7 @@ const Stock =({route,navigation})=> {
     const showendDatepicker = () => {
       showendMode('date');
     };
-    
+   
 
     return (
       <ScrollView>
@@ -89,27 +92,45 @@ const Stock =({route,navigation})=> {
             </>
           </TouchableHighlight>
         </View>
-        <View style={{height:win.height*0.22,width:win.width,backgroundColor:"#72bcd4"}}>
-          <Text style={{paddingLeft:10}}>Close Price for {ticker}</Text>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/close_price/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.height*0.2,width:win.width,marginTop:5}}>
-          </WebView>
+        <Text style={{height:win.height*0.03,paddingLeft:10,backgroundColor:"#72bcd4"}}>Close Price for {ticker}</Text>
+        <View style={{height:win.height*0.22,width:win.width,backgroundColor:"white",justifyContent:"center"}}>
+            <ActivityIndicator color="blue" size="large" animating={true} style={{backgroundColor:"white"}}></ActivityIndicator>
+          <ImageModal
+          source={{
+            uri: `https://streamstrartapi.herokuapp.com/close_price/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`,
+            method: 'GET'
+          }}
+          onLoadEnd={()=> {
+            setLoading(false);
+          }}
+          style={{height:win.height*0.2,width:win.width}}
+          imageBackgroundColor="white"
+          resizeMode="contain"
+          />
         </View>
-        <View style={{height:win.height*0.22,width:win.width,backgroundColor:"#72bcd4"}}>
-          <Text style={{paddingLeft:10}}>Volume for {ticker}</Text>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/volume/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.width*0.2,width:win.width,marginTop:5}}>
-        </WebView>
+        <Text style={{paddingLeft:10,height:win.height*0.03,backgroundColor:"#72bcd4"}}>Volume for {ticker}</Text>
+        <View style={{height:win.height*0.22,width:win.width}}>
+          <ImageModal
+            source={{
+              uri: `https://streamstrartapi.herokuapp.com/volume/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`,
+              method: 'GET'
+            }}
+            style={{height:win.height*0.2,width:win.width}}
+            imageBackgroundColor="white"
+            resizeMode="contain"
+            />
         </View>
-        <TouchableHighlight style={{alignSelf:"center",margin:20,borderColor:"blue",borderRadius:2,borderWidth:2}} 
+        <TouchableHighlight style={{alignSelf:"center",margin:20,marginTop:40,borderColor:"blue",borderRadius:20,borderWidth:2,padding:10}} 
             onPress={() => {
               navigation.navigate('Strategy',{
                 ticker: {ticker}
             })
           }}
+          activeOpacity={0.4} underlayColor={'steelblue'}
         >
           <Text style={{fontSize:20}}>Test out your strategy</Text>
         </TouchableHighlight>
+
       </ScrollView>
     );
 }

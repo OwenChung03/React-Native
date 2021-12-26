@@ -2,7 +2,6 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions} from 'react-native';
-import { back } from 'react-native/Libraries/Animated/src/Easing';
 import { createStackNavigator } from '@react-navigation/stack';
 import Stock from './Stock';
 import { Searchbar } from 'react-native-paper';

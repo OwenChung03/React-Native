@@ -2,23 +2,27 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions} from 'react-native';
+import { StyleSheet, Text, View,Image,TouchableHighlight,ScrollView,Dimensions,TextInput,ActivityIndicator} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Chart, Line, Area, HorizontalAxis, VerticalAxis } from 'react-native-responsive-linechart'
 import { format } from 'date-fns';
+import ImageModal from 'react-native-image-modal';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button } from 'react-native-paper';
 
 
 const win = Dimensions.get('window');
 
 const Strategy =({route,navigation})=> {
-    console.log(route.params.ticker.ticker)
+    const [loading,setLoading] = React.useState(true);
     const [ticker,setTicker] = React.useState(route.params.ticker.ticker)
     const [selectedValue, setSelectedValue] = React.useState("DEMA");
     const [startdate, setstartDate] = React.useState(new Date('2020-01-01'));
     const [startmode, setstartMode] = React.useState('date');
     const [startshow, setstartShow] = React.useState(false);
     const [stocksData,setStocksData] = React.useState([]);
+    const [stake,setStake] = React.useState(1000);
+    const [cash,setCash] = React.useState(100000);
     const onstartChange = (event, selectedDate) => {
 
       const currentDate = selectedDate || startdate;
@@ -101,20 +105,46 @@ const Strategy =({route,navigation})=> {
             <Picker.Item label="OBV" value="OBV"/>
             <Picker.Item label="SMA" value="SMA"/>
           </Picker>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.height*0.3,width:win.width,marginTop:6}}
-                originWhitelist={['*']}>
-          </WebView>
+          <ImageModal
+            source={{ uri: `https://streamstrartapi.herokuapp.com/${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
+            style={{height:win.height*0.2,width:win.width}}
+            imageBackgroundColor="white"
+            resizeMode="contain"
+          />
         </View>
         <View style={styles.graph2}>
           <Text style={{paddingLeft:10,backgroundColor:"#72bcd4"}}>Plots</Text>
-          <WebView source={{ uri: `https://mysterious-springs-60709.herokuapp.com/broker_${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}`}}
-                style={{height:win.height*0.3,width:win.width,marginTop:6}}
-                originWhitelist={['*']}>
-          </WebView>
+          <View style={{height:win.width*0.1,flexDirection:"row",alignItems:"center",justifyContent:"space-around"}}>
+            <View style={{flexDirection:"row",alignItems:"center"}}>
+              <Text style={{fontSize:18}}>Stake: </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setStake}
+                value={stake}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={{flexDirection:"row",alignItems:"center"}}> 
+              <Text style={{fontSize:18}}>Cash:  </Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setCash}
+                value={cash}
+                keyboardType="number-pad"
+              />
+            </View>
+          </View>
+          <ImageModal
+            source={{ uri: `https://streamstrartapi.herokuapp.com/broker_${selectedValue}/${ticker.toUpperCase()}&${format(startdate,'yyyy-MM-dd')}&${format(enddate,'yyyy-MM-dd')}&${stake}&${cash}`}}
+            style={{height:win.height*0.3,width:win.width,marginTop:6}}
+            imageBackgroundColor="white"
+            resizeMode="contain"
+          />
+          
         </View>
       </ScrollView>
     );
+
 }
  
 const styles = StyleSheet.create({
@@ -123,16 +153,15 @@ const styles = StyleSheet.create({
     width:win.width,
   },
   graph1: {
-    height:win.height*0.3,
+    height:win.height*0.26,
     width:win.width,
     paddingTop:18,
-    paddingBottom:18
   },
   graph2: {
-    height:win.height*0.35,
+    height:win.height*0.45,
     width:win.width,
     paddingTop:18,
-    paddingBottom:18
+    paddingBottom:18,
   },
   date: {
     borderRadius: 10,
@@ -144,7 +173,13 @@ const styles = StyleSheet.create({
     height: win.height*0.07,
     margin: 10,
     marginRight: 20,
-  }
+  },
+  input: {
+    height:40,
+    width:100,
+    borderWidth:1,
+    padding:3
+  },
 })
 
 export default Strategy;

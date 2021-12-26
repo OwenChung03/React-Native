@@ -2,11 +2,12 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Searchbar } from 'react-native-paper';
-import { StyleSheet, Text, View,Image,Dimensions,ScrollView,TouchableHighlight} from 'react-native';
+import { StyleSheet, Text, View,Image,Dimensions,ScrollView,TouchableHighlight,ActivityIndicator} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Card,Paragraph,Title} from 'react-native-paper';
 import ImageModal from 'react-native-image-modal';
+import ModalDropdown from 'react-native-modal-dropdown';
 import { auto } from 'async';
 
 const win = Dimensions.get('window');
@@ -28,7 +29,10 @@ const Twitter = () =>{
     },[])
     return(
         <View>
-            {isLoading? <Text>loading</Text>: 
+            {isLoading?                 
+                <View style={{paddingBottom:100,flex:1,alignItems:"center",justifyContent:"center"}}>
+                    <ActivityIndicator style='50' color="blue"></ActivityIndicator>
+                </View>: 
                 <ScrollView style={{marginBottom:100}}>
                     {twitterData.map((tweet,index) => {
 
@@ -42,7 +46,7 @@ const Twitter = () =>{
                                 </View>
                                 <Title>{tweet['username']}</Title>
                                 <ImageModal  
-                                        imageBackgroundColor="#000000"
+                                        imageBackgroundColor="#ECECEC"
                                         source={{uri:tweet['image']}}
                                         style={{height:win.height*0.2,width:win.width*0.8}}
                                         resizeMode="contain"/>
@@ -81,7 +85,11 @@ const Stockwits = () => {
     },[symbol])
     return(
         <>
-            {isLoading? <Text>loading</Text>: 
+            {isLoading?                 
+                <View style={{paddingBottom:100,flex:1,alignItems:"center",justifyContent:"center"}}>
+                    <ActivityIndicator style='50' color="blue"></ActivityIndicator>
+                </View>
+            : 
             <View>
             <View style={{marginLeft: 70}}>
                 <Text >Search Symbol</Text>
@@ -144,16 +152,29 @@ const page = () => {
                 <Text>
                     Select Dashboard
                 </Text>
-                <View style={{borderWidth:2,borderColor:"#99cfe0",borderRadius:40,margin:10,paddingLeft:10}}>
-                    <Picker
+                {/* <View style={{borderWidth:2,borderColor:"#99cfe0",borderRadius:40,margin:10,paddingLeft:10}}> */}
+                    {/* <Picker
                         selectedValue={selectedValue}
                         style={{ height: 50, width: win.width*0.8 }}
                         onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                         >
                         <Picker.Item label="Twitter" value="Twitter" />
                         <Picker.Item label="Stockwits" value="Stockwits" />
-                    </Picker>
+                    </Picker> */}
+                {/* </View> */}
+                <View style={{borderWidth:2,borderColor:"#99cfe0",height:40,borderRadius:30}} > 
+                <ModalDropdown 
+                        options={['Twitter', 'Stockwits']}
+                        textStyle={{fontSize:20}}
+                        dropdownStyle={{height:65,width:200}}
+                        defaultIndex={0}
+                        defaultValue='Twitter'
+                        style={{ height: 50, width: win.width*0.8, }}
+                        onSelect={(itemValue,itemIndex) => setSelectedValue(itemIndex)}
+
+                    />
                 </View>
+
             </View>
             {selectedValue=="Twitter"? <Twitter/>: <Stockwits/>}
           </View>
@@ -178,7 +199,7 @@ const styles = StyleSheet.create({
     container: {
         width: win.width,
         height: win.height*0.85,
-        alignItems: "center"
+        alignItems: "center",
     },
     picker:{
         borderWidth: 2,
